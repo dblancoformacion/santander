@@ -1,0 +1,39 @@
+SELECT DISTINCT at_a,cluster FROM distancias;
+DROP TABLE puntos_negros;
+CREATE TABLE puntos_negros AS
+SELECT * FROM (
+    SELECT DISTINCT at_a NUM_ATESTADO,cluster FROM distancias
+  ) distancias LEFT JOIN (
+    SELECT NUM_ATESTADO,FECHA,HORA_INCIDENCIA,COD_INTERV,LUGAR_INTERV FROM TBL_OIPAC_GRAL_DILIGENCIAS
+  ) TBL_OIPAC_GRAL_DILIGENCIAS USING(NUM_ATESTADO) LEFT JOIN (
+    SELECT NUM_ATESTADO,ESTADO_SUPERFICIE,CAUSA_PRINCIPAL,TIPO_COLISION FROM TBL_OIPAC_IT_PRINCIPAL
+  ) TBL_OIPAC_IT_PRINCIPAL USING(NUM_ATESTADO) LEFT JOIN (
+    SELECT NUM_ATESTADO,TIPO,PROXIMA_ITV,COLOR FROM TBL_OIPAC_IT_VEHICULOS
+  ) TBL_OIPAC_IT_VEHICULOS USING(NUM_ATESTADO) LEFT JOIN (
+    SELECT NUM_ATESTADO cluster,Latitud,Longitud FROM coord
+  ) coord USING(cluster) LEFT JOIN 
+  TBL_OIPAC_INTERVENCIONES USING(COD_INTERV);
+
+SELECT * FROM puntos_negros;
+SELECT YEAR(fecha),COUNT(*) n FROM puntos_negros GROUP BY 1 ORDER BY 2 DESC;
+
+SELECT cluster,YEAR(fecha) ejercicio,COUNT(*) n
+  FROM puntos_negros GROUP BY 1,2 ORDER BY n DESC;
+
+SELECT cluster,MAX(n) n_max FROM (
+    SELECT cluster,YEAR(fecha) ejercicio,COUNT(*) n FROM puntos_negros GROUP BY 1,2  
+  ) c1 GROUP BY 1;
+
+SELECT * FROM (
+    SELECT cluster,YEAR(fecha) ejercicio,COUNT(*) n,Latitud,Longitud,
+      LUGAR_INTERV FROM puntos_negros GROUP BY 1,2  
+  ) c2 JOIN (
+    SELECT cluster,MAX(n) n FROM (
+        SELECT cluster,YEAR(fecha) ejercicio,COUNT(*) n FROM puntos_negros GROUP BY 1,2  
+      ) c1 GROUP BY 1  
+  ) c3 USING(cluster,n)
+  WHERE ejercicio=2018
+  ORDER BY n DESC;
+
+SELECT * FROM puntos_negros;
+SELECT * FROM distancias;

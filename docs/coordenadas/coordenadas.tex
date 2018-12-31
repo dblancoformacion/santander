@@ -1,0 +1,51 @@
+\documentclass[a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[latin1]{inputenc}
+\parindent 0mm
+\parskip 3mm
+\begin{document}
+
+\section*{Cambio de coordenadas GPS}
+
+Para realizar un cambio de coordenadas de las actuales $(x_1,y_1)$ a  las que es capaz de entender Google Maps $(x_1',y_1')$, habrá que resolver el sistema de ecuaciones lineales \ref{eq:cambio_coordenadas}
+
+
+\begin{equation}
+\left.
+\begin{array}{rcl}
+x_1'&=&a x_1+b\\
+y_1'&=&c y_1+d
+\end{array}
+\right\}
+\label{eq:cambio_coordenadas}
+\end{equation}
+
+Para obtener los valores de $a, b ,c$ y $d$, dado que es un sistema sobredimensionado, será necesario otro par de coordenadas:
+
+\begin{equation}
+\left.
+\begin{array}{rcl}
+x_2'&=&a x_2+b\\
+y_2'&=&c y_2+d
+\end{array}
+\right\}
+\label{eq:segundo_par}
+\end{equation}
+
+
+Resolviendo:
+
+\begin{eqnarray}
+a&=&\frac{x_1'-x_2'}{x_1-x_2}\\
+b&=&x_1'-a x_1\\
+c&=&\frac{y_1'-y_2'}{y_1-y_2}\\
+d&=&y_1'-c y_1
+\end{eqnarray}
+
+¿Qué problema me he encontrado? Pues que las coordenadas $(x_1,y_1)$ no se corresponden con la dirección postal registrada y, por tanto, tampoco con las coordenadas GPS $(x_1',y_1')$ que se obtienen de Google.
+
+¿Por dónde pienso continuar? Pues por coordenadas que pueda identificar en la nube de puntos, como el cruce de la Marga, el principio de Marqués de la Hermida o la península de Magdalena y, en esos casos sí, aplicar las ecuaciones planteadas anteriormente para poder superponer un plano de la ciudad.
+
+Si alguien tiene una idea mejor, por favor, que me la comente.
+
+\end{document}
